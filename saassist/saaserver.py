@@ -95,7 +95,8 @@ class SAAServer(object):
 
             if self.sec_id.startswith('CVE'):
                 apar_asc_file = '{0}/{1}'.format(
-                    apar_rel_dir, self.apar_data[apar_key][2].split('/')[-1])
+                    apar_rel_dir,
+                    self.apar_data[apar_key][2][0].split('/')[-1])
 
             elif self.sec_id.startswith('IV'):
                 apar_asc_file = '{0}/{1}.asc'.format(apar_rel_dir,
