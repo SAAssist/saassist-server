@@ -25,16 +25,16 @@ class Collector(object):
     """
     Class Collector
 
-        Usage: Collector('CVE Number')
+        Usage: Collector('CVE/IV Number')
 
         Sample:
 
         from datacollector import Collector
         cve_data = Collector('CVE-2016-755')
     """
-    def __init__(self, cve=''):
+    def __init__(self, sec_id=''):
 
-        self.apar = cve.upper()
+        self.apar = sec_id.upper()
         self.flrt_cache = '{0}/saassist/data/cache/flrt_cache.html'.format(
             saassist_home)
 	
@@ -99,7 +99,7 @@ class Collector(object):
                  Dictionary structure:
                  {
                  [Version Version]: [[Affected Releases], 'APAR abstract',
-                                    'affected release' 'ASC File link',
+                                    'affected release' [ASC File link],
                                     [APAR File link], 'affected filesets']
                  }
         """
