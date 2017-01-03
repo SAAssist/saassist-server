@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+
+case $1 in
+
+'-ik')
+    check=$(ls -la /tmp/$2 >/dev/null 2>&1)
+    if [ $? -eq 0 ]; then
+        echo "All filesets for $2 were found."
+    else
+        exit 1
+    fi
+    ;;
+
+esac

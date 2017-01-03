@@ -1,0 +1,5 @@
+.idea/
+saassist/data/repos/IV*
+saassist/data/repos/CVE*
+*.pyc
+__pycache__
