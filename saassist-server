@@ -7,12 +7,16 @@
 import argparse
 from saassist.saaserver import SAAServer
 
+# version control
+version = 0.1
 
 # header
 def _print_header():
     print('\n')
     print('=' * 80)
-    print('SAAssist-server (Security APAR Assist Server) - Version 0.1-beta')
+    print('SAAssist-server (Security APAR Assist Server) - Version {0}'.format(
+        version
+    ))
     print('=' * 80)
 
 
