@@ -4,9 +4,9 @@
 #
 #
 # Security APAR assistent installation path
-saassist_home = '/Users/kairoaraujo/Documents/Dev/Python/saassist-server'
+saassist_home = '/Users/kairoaraujo/Dev/SAAssist/saassist-server'
 
-# Proxy Server 
+# Proxy Server
 # If saassist-server needs to access IBM Fix Level Recommendation Tool through
 # a proxy server is necessary specify the proxy server.
 # (Empty or proxy = 'http://proxyserver:3128')
@@ -22,7 +22,7 @@ ssl_context=False
 saassist_web_port = 8000
 
 # Cache File for FLRT
-# Define how long you want to use cache file without update. 
+# Define how long you want to use cache file without update.
 # It is defined in seconds, default is 1 day = 86400 seconds.
 cache_time = 86400
 

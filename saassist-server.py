@@ -6,8 +6,7 @@
 import argparse
 from saassist.saaserver import SAAServer
 from server_config import saassist_home
-from os import listdir
-
+import os
 # version control
 version = 0.1
 
@@ -24,32 +23,44 @@ def _print_header():
 _print_header()
 
 # construct the command lines for server
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(prog='saassist-server')
 
-parser.add_argument('list', action='store_true',
-                    help='list all available CVE/IV on SAAssist')
+parser.add_argument('-c', '--create', action='store', dest='apar_download',
+                    help='create CVE (Common Vulnerabilities and Exposures) '
+                         'or IV (Interim Fix) repository')
 
-parser.add_argument('SecurityID', type=str,
-                    help='is a CVE (Common Vulnerabilities and Exposures) or '
-                         'IV (Interim Fix) existent on IBM FLRT (Fix Level '
-                         'Recommendation Tool)')
+parser.add_argument('-u', '--update', action='store', dest='apar_update',
+                    help='update an already existent CVE/IV repository')
 
-parser.add_argument('-u', '--update', action='store_true',
-                    help='update a CVE/IV already existent on SAAssist')
+parser.add_argument('-l', '--list', action='store_true',
+                    help='list all available CVE/IV')
 
 arguments = parser.parse_args()
 
-sec_id = arguments.SecurityID.upper()
-
 if arguments.list:
-    listdir('{0}/saassist/data/repos/'.format(saassit_home))
+    repo_dir = '{0}/saassist/data/repos/'.format(saassist_home)
+    dir_list = os.listdir(repo_dir)
+    for apar_dir in dir_list:
+        if os.path.isdir(repo_dir+apar_dir):
+            print(apar_dir)
     exit(0)
 
+if arguments.apar_download == None and arguments.apar_update == None:
+    parser.print_help()
+    exit()
+
+elif arguments.apar_download == None:
+    apar = arguments.apar_update.upper()
+
+else:
+    apar = arguments.apar_download.upper()
+
+
 # verify if the information looks correct
-if sec_id.startswith('CVE') and len(sec_id) == 13:
+if apar.startswith('CVE') and len(apar) == 13:
     sec_id_std = True
 
-elif sec_id.startswith('IV') and len(sec_id) == 7:
+elif apar.startswith('IV') and len(apar) == 7:
     sec_id_std = True
 
 else:
@@ -59,15 +70,14 @@ if sec_id_std is False:
     print('CVE or IV [{0}] number does not look correct.\n'
           'Standard is CVE-NNNN-NNNN or IVNNNNN.\n'
           'Example: CVE-2016-4948\n'
-          '         IV91432\n'.format(sec_id))
+          '         IV91432\n'.format(apar))
     exit()
 
 # do the update action
-
-if arguments.update:
-    saassist_run = SAAServer(sec_id)
+if arguments.apar_download == None:
+    saassist_run = SAAServer(apar)
     saassist_run.repo_creation(update=True)
 
-else:
-    saassist_run = SAAServer(sec_id)
+if arguments.apar_update == None:
+    saassist_run = SAAServer(apar)
     saassist_run.repo_creation(update=False)
