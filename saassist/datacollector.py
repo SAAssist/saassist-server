@@ -177,7 +177,8 @@ class Collector(object):
                             asc_file_link.append(pre_text.text)
 
                     else:
-                        asc_file_link.append(asc_file_tmp)
+                        asc_file_link.append(asc_file_tmp.replace('http://', 
+                        'https://')
 
 
                 # collect link for APAR download
@@ -187,7 +188,19 @@ class Collector(object):
                     # IBM FLRT has two different kinds of links for CVE and IV
                     # if CVE is explicit
                     if self.apar.startswith('CVE'):
-                        apar_download_link.append(apar_download.get('href'))
+                        if apar_download.get('href').startswith('http://'):
+                            apar_download_link.append(
+                                apar_download.get('href').replace(
+                                    'http://', 'https://'))
+                        
+                        elif apar_download.get('href').startswith('ftp://'):
+                            apar_download_link.append(
+                                apar_download.get('href').replace(
+                                    'ftp://', 'https://'))
+                                    
+                        else:
+                            par_download_link.append(apar_download.get('href')
+                            
 
                     # if IV is necessary access another url and get the correct
                     # link and some cases it is available on FTP
@@ -203,6 +216,7 @@ class Collector(object):
                             apar_ftp.cwd('/aix/ifixes/{0}/'.format(
                                 self.apar.lower()))
                             apar_ftp_list = apar_ftp.nlst()
+                            
                             for pkg in apar_ftp_list:
                                 apar_download_link.append('{0}/{1}'.format(
                                     apar_dwl_link_tmp.replace(
