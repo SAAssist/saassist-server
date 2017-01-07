@@ -246,7 +246,7 @@ saassist-server structure
 PyDoc saassist-server python files
 ----------------------------------
 
-PyDoc is available on doc/saassist
+PyDoc is available.
 
 
 saassist-client structure
