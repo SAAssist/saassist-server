@@ -3,7 +3,7 @@ Security APAR Assistant
 ***********************
 
 :SAAssist: Security APAR Assistant
-:License: Apache
+:License: Apache 2.0
 :Development: http://github/kairoaraujo/SAAssist
 
 
