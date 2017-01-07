@@ -243,6 +243,9 @@ class Collector(object):
                                                 asc_file_link,
                                                 apar_download_link,
                                                 apar_filesets]
+
+                print(apar_flrt)
+                exit()
                 # clean list of affected releases to be used again
                 affected_releases = []
                 apar_filesets = []

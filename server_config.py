@@ -28,4 +28,5 @@ cache_time = 86400
 
 # IBM Fix Level Recommendation Tool URL
 # Is not recommended to change. Edit it only if necessary/required
-flrt_url = 'https://www-304.ibm.com/webapp/set2/flrt/doc?page=security&skey=updatedAll'
+#flrt_url = 'https://www-304.ibm.com/webapp/set2/flrt/doc?page=security&skey=updatedAll'
+flrt_url = 'https://www14.software.ibm.com/support/customercare/flrtbeta/doc?page=aparCSV'

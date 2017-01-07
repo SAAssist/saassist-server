@@ -6,7 +6,7 @@
 from server_config import proxy
 from server_config import saassist_home
 from server_config import ssl_context
-from saassist.datacollector import Collector
+from saassist.datacollector_csv import Collector
 import ssl
 from urllib import request
 from urllib import error
@@ -59,6 +59,7 @@ class SAAServer(object):
 
         """
 
+
         # check if the data has some data
         if len(self.apar_data) == 0:
             print('{0} is not valid or was not found at IBM FLRT (Fix Level '
@@ -85,30 +86,20 @@ class SAAServer(object):
                 print('  -[REPO] Directory {0} already exists.'.format(
                     self.sec_id))
 
-        for apar_key in self.apar.apar_data().keys():
+        for apar_key in self.apar_data.keys():
 
             # initialize all variables
             apar_abstract = self.apar_data[apar_key][0]
             apar_releases = ' '.join(self.apar_data[apar_key][1])
             apar_rel_dir = '{0}/{1}'.format(cve_dir, apar_key)
             apar_asc_data = self.apar_data[apar_key][2]
-
-            if self.sec_id.startswith('CVE'):
-                apar_asc_file = '{0}/{1}'.format(
-                    apar_rel_dir,
-                    self.apar_data[apar_key][2][0].split('/')[-1])
-
-            elif self.sec_id.startswith('IV'):
-                apar_asc_file = '{0}/{1}.asc'.format(apar_rel_dir,
+            apar_asc_file = '{0}/{1}.asc'.format(apar_rel_dir,
                                                       self.sec_id)
-
-            else:
-                print('[ERROR] Unexpected error (apar_asc_file), '
-                      'please report it.')
             apar_dwl_link = self.apar_data[apar_key][3]
             apar_dwl_path = '{0}/'.format(apar_rel_dir)
             apar_filesets = ' '.join(self.apar_data[apar_key][4])
             cve_info_file = '{0}/{1}.info'.format(apar_rel_dir, self.sec_id)
+            apar_rebooted = self.apar_data[apar_key][5]
 
             if not os.path.exists(apar_rel_dir):
                 print(
@@ -127,21 +118,19 @@ class SAAServer(object):
                 print('  -[REPO] Downloading ASC file {0}'.format(
                     apar_asc_file.split('/')[-1]))
                 try:
-                    if self.sec_id.startswith('CVE'):
-                        request.urlretrieve(apar_asc_data[0], apar_asc_file)
+                    if apar_asc_data[0] == 'ASC':
+                        request.urlretrieve(apar_asc_data[1], apar_asc_file)
 
-                    elif self.sec_id.startswith('IV'):
+                    elif apar_asc_data[0] == 'HTML':
                         asc_file = open(apar_asc_file, 'w')
-                        for l_text in apar_asc_data:
+                        for l_text in apar_asc_data[1:]:
                             asc_file.write(l_text)
-
                         asc_file.close()
 
-
                     else:
-                        print('[ERROR] Unexpected error (apar_file_asc) '
-                              'please report it.')
-                        exit(1)
+                        print('[ERROR]: You got a strange error, please report '
+                              'it [saaserver.py][apar_asc_data]')
+
 
                 except error.URLError as e:
                     exit('\033[1;31m[ERROR]\033[1;00m {0}\n'.format(e))
@@ -213,11 +202,13 @@ class SAAServer(object):
                     'APAR_ASC=\'{5}\''
                     '\n'
                     'APAR_FIX=\'{6}\''
+                    '\n'
+                    'APAR_REBOOT=\'{7}\''
                     '\n'.format(
                         self.sec_id, apar_abstract, apar_releases,
                         apar_filesets, ' '.join(iv_list),
                         apar_asc_file.split('/')[-1],
-                        ' '.join(apar_dwl_link)
+                        ' '.join(apar_dwl_link), apar_rebooted
                     )
                 )
                 cve_info_data.close()
