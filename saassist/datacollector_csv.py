@@ -20,7 +20,6 @@ from urllib import request
 from urllib import error
 
 
-
 class Collector(object):
     """
     Class Collector
@@ -32,24 +31,25 @@ class Collector(object):
         from datacollector import Collector
         cve_data = Collector('CVE-2016-755')
     """
+
     def __init__(self, sec_id=''):
 
         self.apar = sec_id.upper()
         self.flrt_cache = '{0}/saassist/data/cache/flrt_cache.csv'.format(
             saassist_home)
-	
+
         # ssl_context is a option when receives error about unverified SSL
         if ssl_context:
             ssl._create_default_https_context = ssl._create_unverified_context
 
         # load proxy if it is configured
         if proxy:
-           proxies= {'http': proxy,
-                     'https': proxy,
-                     'ftp': proxy}
-           proxy_connect = request.ProxyHandler(proxies)
-           opener = request.build_opener(proxy_connect)
-           request.install_opener(opener)
+            proxies = {'http': proxy,
+                       'https': proxy,
+                       'ftp': proxy}
+            proxy_connect = request.ProxyHandler(proxies)
+            opener = request.build_opener(proxy_connect)
+            request.install_opener(opener)
 
         def _collect_data():
             # Collect FLRT data
@@ -63,8 +63,8 @@ class Collector(object):
         def _read_cache_data():
             # Collect FLRT data from 'cache' file
             flrt_data_csv = csv.reader(open(self.flrt_cache, newline='',
-                                        encoding='ISO-8859-1'),
-                                   delimiter=',')
+                                            encoding='ISO-8859-1'),
+                                       delimiter=',')
             return flrt_data_csv
 
         # check if the file still on cache size server_config.cache_time
@@ -151,7 +151,7 @@ class Collector(object):
             # collect link for APAR bulletin (.asc file)
             asc_file_type = bulletin_url.split('/')[-1].split('.')[-1]
 
-            if  asc_file_type == 'asc':
+            if asc_file_type == 'asc':
                 asc_file_data.append('ASC')
                 asc_file_data.append(bulletin_url)
 
@@ -179,8 +179,8 @@ class Collector(object):
                 apar_download_link.append(_replace_to_https(download))
 
             # check if APAR link is a ftp link and many files are available
-            elif (download.startswith('ftp://') and
-                          download.split('/')[-1].strip() == ''):
+            elif download.startswith('ftp://') and download.split(
+                    '/')[-1].strip() == '':
 
                 apar_ftp = FTP(download.split('/')[2])
                 apar_ftp.login()
@@ -191,22 +191,21 @@ class Collector(object):
                     apar_download_link.append('{0}{1}'.format(
                         _replace_to_https(download), pkg.strip()))
 
-
             # check if APAR link
             elif download.split('/')[-1].strip() == '':
                 download = _replace_to_https(download)
 
                 # parser the url
                 apar_dwl_cnt = BeautifulSoup(download,
-                                                     'html.parser')
+                                             'html.parser')
                 apar_dwn_link = apar_dwl_cnt.find_all('a')
                 # search for link that has the IV name
                 for apar_link in apar_dwn_link:
-                        if re.search(self.apar, apar_link.text):
-                            apar_download_link.append('{0}{1}'.format(
-                                download.get('href').strip(),
-                                apar_link.text
-                            ))
+                    if re.search(self.apar, apar_link.text):
+                        apar_download_link.append('{0}{1}'.format(
+                            download.get('href').strip(),
+                            apar_link.text
+                        ))
 
             else:
                 print('[ERROR] Please report it [datacollector_csv.py]'
@@ -236,16 +235,16 @@ class Collector(object):
 
         # check data on flrt_data and select the row to be performed the query
         apar_flrt = {}
-        for row in self.flrt_data:
+        for frl_row in self.flrt_data:
             affected_releases = []
             asc_file_data = []
             apar_download_link = []
             apar_filesets = []
 
             # initial row data
-            versions = row[2]
-            apars = row[4]
-            cvss = row[13]
+            os_versions = frl_row[2]
+            apars = frl_row[4]
+            cvss = frl_row[13]
 
             if self.apar.startswith('IV') and self.apar in apars:
 
@@ -259,8 +258,7 @@ class Collector(object):
                     exit(1)
 
                 else:
-                    _apar_query(row)
-
+                    _apar_query(frl_row)
 
             if self.apar.startswith('CVE') and self.apar in cvss:
 
@@ -269,8 +267,8 @@ class Collector(object):
                 # such as Java, OpenSSL and it is not treated by Security APAR
                 # Assist, yet
                 #
-                if re.search('[a-zA-Z]', versions):
-                    if versions == 'versions':
+                if re.search('[a-zA-Z]', os_versions):
+                    if os_versions == 'versions':
                         continue
 
                     else:
@@ -280,12 +278,10 @@ class Collector(object):
                               'It is NOT supported by Security APAR Assist '
                               'yet.\n'
                               'Skipping it.'
-                              '\n'.format(self.apar, versions))
+                              '\n'.format(self.apar, os_versions))
                         continue
 
-                _apar_query(row)
-
-
+                _apar_query(frl_row)
 
         # return dictionary with basic APAR information
         if len(apar_flrt) == 0:
@@ -294,4 +290,4 @@ class Collector(object):
             exit()
 
         else:
-            return(apar_flrt)
+            return apar_flrt

@@ -7,8 +7,10 @@ import argparse
 from saassist.saaserver import SAAServer
 from server_config import saassist_home
 import os
+
 # version control
 version = 0.1
+
 
 # header
 def _print_header():
@@ -41,20 +43,20 @@ if arguments.list:
     repo_dir = '{0}/saassist/data/repos/'.format(saassist_home)
     dir_list = os.listdir(repo_dir)
     for apar_dir in dir_list:
-        if os.path.isdir(repo_dir+apar_dir):
+        if os.path.isdir(repo_dir + apar_dir):
             print(apar_dir)
     exit(0)
 
-if arguments.apar_download == None and arguments.apar_update == None:
+if arguments.apar_download is None and arguments.apar_update is None:
     parser.print_help()
+    apar = None
     exit()
 
-elif arguments.apar_download == None:
+elif arguments.apar_download is None:
     apar = arguments.apar_update.upper()
 
 else:
     apar = arguments.apar_download.upper()
-
 
 # verify if the information looks correct
 if apar.startswith('CVE') and len(apar) == 13:
@@ -74,10 +76,10 @@ if sec_id_std is False:
     exit()
 
 # do the update action
-if arguments.apar_download == None:
+if arguments.apar_download is None:
     saassist_run = SAAServer(apar)
     saassist_run.repo_creation(update=True)
 
-if arguments.apar_update == None:
+if arguments.apar_update is None:
     saassist_run = SAAServer(apar)
     saassist_run.repo_creation(update=False)

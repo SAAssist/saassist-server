@@ -33,9 +33,9 @@ class SAAServer(object):
 
         # enables proxy if present on server_config
         if proxy:
-            proxies= {'http': proxy,
-                      'https': proxy,
-                      'ftp': proxy}
+            proxies = {'http': proxy,
+                       'https': proxy,
+                       'ftp': proxy}
             proxy_connect = request.ProxyHandler(proxies)
             opener = request.build_opener(proxy_connect)
             request.install_opener(opener)
@@ -58,7 +58,6 @@ class SAAServer(object):
                             `---{apar file}
 
         """
-
 
         # check if the data has some data
         if len(self.apar_data) == 0:
@@ -94,7 +93,7 @@ class SAAServer(object):
             apar_rel_dir = '{0}/{1}'.format(cve_dir, apar_key)
             apar_asc_data = self.apar_data[apar_key][2]
             apar_asc_file = '{0}/{1}.asc'.format(apar_rel_dir,
-                                                      self.sec_id)
+                                                 self.sec_id)
             apar_dwl_link = self.apar_data[apar_key][3]
             apar_dwl_path = '{0}/'.format(apar_rel_dir)
             apar_filesets = ' '.join(self.apar_data[apar_key][4])
@@ -130,7 +129,6 @@ class SAAServer(object):
                     else:
                         print('[ERROR]: You got a strange error, please report '
                               'it [saaserver.py][apar_asc_data]')
-
 
                 except error.URLError as e:
                     exit('\033[1;31m[ERROR]\033[1;00m {0}\n'.format(e))

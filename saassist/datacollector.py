@@ -20,7 +20,6 @@ from urllib import request
 from urllib import error
 
 
-
 class Collector(object):
     """
     Class Collector
@@ -32,25 +31,25 @@ class Collector(object):
         from datacollector import Collector
         cve_data = Collector('CVE-2016-755')
     """
+
     def __init__(self, sec_id=''):
 
         self.apar = sec_id.upper()
         self.flrt_cache = '{0}/saassist/data/cache/flrt_cache.html'.format(
             saassist_home)
-	
+
         # ssl_context is a option when receives error about unverified SSL
         if ssl_context:
             ssl._create_default_https_context = ssl._create_unverified_context
 
         # load proxy if it is configured
         if proxy:
-           proxies= {'http': proxy,
-                     'https': proxy,
-                     'ftp': proxy}
-           proxy_connect = request.ProxyHandler(proxies)
-           opener = request.build_opener(proxy_connect)
-           request.install_opener(opener)
-            
+            proxies = {'http': proxy,
+                       'https': proxy,
+                       'ftp': proxy}
+            proxy_connect = request.ProxyHandler(proxies)
+            opener = request.build_opener(proxy_connect)
+            request.install_opener(opener)
 
         def _collect_data():
             # Collect FLRT data
@@ -178,7 +177,6 @@ class Collector(object):
 
                     else:
                         asc_file_link.append(asc_file_tmp)
-
 
                 # collect link for APAR download
                 for apar_download in apar.find_all('a',
