@@ -122,7 +122,7 @@ class Collector(object):
                 https_url = url.strip().replace('ftp://', 'https://')
 
             else:
-                https_url = url.stip()
+                https_url = url.strip()
 
             return https_url
 
@@ -164,12 +164,18 @@ class Collector(object):
 
             if asc_file_type == 'asc':
                 asc_file_data.append('ASC')
-                asc_file_data.append(bulletin_url)
+                asc_file_data.append(_replace_to_https(bulletin_url))
 
             else:
                 asc_file_data.append('HTML')
-                asc_html = BeautifulSoup(
-                    request.urlopen(bulletin_url).read(), 'html.parser')
+                try:
+                    asc_html = BeautifulSoup(
+                        request.urlopen(
+                            _replace_to_https(bulletin_url)).read(),
+                            'html.parser')
+                except errorj.URLError as e:
+                    exit('\033[1;31m[ERROR]\033[1;00m {0}\n'.format(e))
+
                 for pre_text in asc_html.find_all('pre'):
                     asc_file_data.append(pre_text.text)
 
@@ -207,21 +213,20 @@ class Collector(object):
                 download = _replace_to_https(download)
 
                 # parser the url
-                apar_dwl_cnt = BeautifulSoup(download,
-                                             'html.parser')
+                download_read = request.urlopen(download)
+                apar_dwl_cnt = BeautifulSoup(download_read, 'html.parser')
                 apar_dwn_link = apar_dwl_cnt.find_all('a')
                 # search for link that has the IV name
                 for apar_link in apar_dwn_link:
                     if re.search(self.apar, apar_link.text):
                         apar_download_link.append('{0}{1}'.format(
-                            download.get('href').strip(),
+                            download.strip(),
                             apar_link.text
                         ))
 
             else:
                 print('[ERROR] Please report it [datacollector_csv.py]'
                       '[_apar_query()][apar_download_link]')
-                print(download)
                 print(download.split('/')[-1])
                 exit(2)
 
@@ -246,16 +251,16 @@ class Collector(object):
 
         # check data on flrt_data and select the row to be performed the query
         apar_flrt = {}
-        for frl_row in self.flrt_data:
+        for flrt_row in self.flrt_data:
             affected_releases = []
             asc_file_data = []
             apar_download_link = []
             apar_filesets = []
 
             # initial row data
-            os_versions = frl_row[2]
-            apars = frl_row[4]
-            cvss = frl_row[13]
+            os_versions = flrt_row[2]
+            apars = flrt_row[4]
+            cvss = flrt_row[13]
 
             if self.apar.startswith('IV') and self.apar in apars:
 
@@ -269,7 +274,7 @@ class Collector(object):
                     exit(1)
 
                 else:
-                    _apar_query(frl_row)
+                    _apar_query(flrt_row)
 
             if self.apar.startswith('CVE') and self.apar in cvss:
 
@@ -292,7 +297,7 @@ class Collector(object):
                               '\n'.format(self.apar, os_versions))
                         continue
 
-                _apar_query(frl_row)
+                _apar_query(flrt_row)
 
         # return dictionary with basic APAR information
         if len(apar_flrt) == 0:
