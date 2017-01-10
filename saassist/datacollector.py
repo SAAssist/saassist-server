@@ -1,8 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# datacollector.py
+# Copyright 2016, 2017 Kairo Araujo
 #
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from bs4 import BeautifulSoup
 from bs4 import NavigableString
@@ -20,7 +31,6 @@ from urllib import request
 from urllib import error
 
 
-
 class Collector(object):
     """
     Class Collector
@@ -32,25 +42,25 @@ class Collector(object):
         from datacollector import Collector
         cve_data = Collector('CVE-2016-755')
     """
+
     def __init__(self, sec_id=''):
 
         self.apar = sec_id.upper()
         self.flrt_cache = '{0}/saassist/data/cache/flrt_cache.html'.format(
             saassist_home)
-	
+
         # ssl_context is a option when receives error about unverified SSL
         if ssl_context:
             ssl._create_default_https_context = ssl._create_unverified_context
 
         # load proxy if it is configured
         if proxy:
-           proxies= {'http': proxy,
-                     'https': proxy,
-                     'ftp': proxy}
-           proxy_connect = request.ProxyHandler(proxies)
-           opener = request.build_opener(proxy_connect)
-           request.install_opener(opener)
-            
+            proxies = {'http': proxy,
+                       'https': proxy,
+                       'ftp': proxy}
+            proxy_connect = request.ProxyHandler(proxies)
+            opener = request.build_opener(proxy_connect)
+            request.install_opener(opener)
 
         def _collect_data():
             # Collect FLRT data
@@ -179,7 +189,6 @@ class Collector(object):
                     else:
                         asc_file_link.append(asc_file_tmp)
 
-
                 # collect link for APAR download
                 for apar_download in apar.find_all('a',
                                                    target='apar-download'):
@@ -243,6 +252,9 @@ class Collector(object):
                                                 asc_file_link,
                                                 apar_download_link,
                                                 apar_filesets]
+
+                print(apar_flrt)
+                exit()
                 # clean list of affected releases to be used again
                 affected_releases = []
                 apar_filesets = []

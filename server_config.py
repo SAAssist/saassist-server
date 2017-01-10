@@ -1,8 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
+# Copyright 2016, 2017 Kairo Araujo
 #
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # Security APAR assistent installation path
 saassist_home = '/Users/kairoaraujo/Dev/SAAssist/saassist-server'
 
@@ -28,4 +40,5 @@ cache_time = 86400
 
 # IBM Fix Level Recommendation Tool URL
 # Is not recommended to change. Edit it only if necessary/required
-flrt_url = 'https://www-304.ibm.com/webapp/set2/flrt/doc?page=security&skey=updatedAll'
+#flrt_url = 'https://www-304.ibm.com/webapp/set2/flrt/doc?page=security&skey=updatedAll'
+flrt_url = 'https://www14.software.ibm.com/support/customercare/flrtbeta/doc?page=aparCSV'

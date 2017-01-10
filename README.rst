@@ -3,7 +3,7 @@ Security APAR Assistant
 ***********************
 
 :SAAssist: Security APAR Assistant
-:License: Apache
+:License: Apache 2.0
 :Development: http://github/kairoaraujo/SAAssist
 
 
@@ -120,7 +120,7 @@ Using saassist-server
 The saassist-server is simple to be used. You need to run the saassist-server
 specifying the CVE or IV number that you want to include on repository.
 
-Example: ``saassist-server CVE-2016-3053`` or ``saassist-server IV88136``
+Example: ``saassist-server -c CVE-2016-3053`` or ``saassist-server -c IV88136``
 
 The other options are -h to help of to -u update an existent CVE/IV.
 
@@ -246,150 +246,11 @@ saassist-server structure
 PyDoc saassist-server python files
 ----------------------------------
 
-* saassist-server.py
-
-.. code-block::
-
-    ============================================================================
-    SAAssist-server (Security APAR Assist Server) - Version 0.1-beta
-    ============================================================================
-    CVE or IV [SAASSIST-SERVER] number does not look correct.
-    Standard is CVE-NNNN-NNNN or IVNNNNN.
-    Example: CVE-2016-4948
-             IV91432
-
-    problem in saassist-server - SystemExit: None
-
-
-* saassist/saaserver.py
-
-.. code-block::
-
-    NAME
-        saassist.saaserver
-
-    DESCRIPTION
-        # -*- coding: utf-8 -*-
-        #
-        # saaserver.py
-        #
-
-    CLASSES
-        builtins.object
-            SAAServer
-
-        class SAAServer(builtins.object)
-         |  Class SAAServer (Security APAR Assistant Server)
-         |
-         |  This class will manager the server SAAssist.
-         |
-         |  Methods defined here:
-         |
-         |  __init__(self, sec_id)
-         |
-         |  repo_creation(self, update=False)
-         |      This function generates all structure repository directory,
-         |      downloading and creating file
-         |
-         |      :param update: False to skip existing files, True to ignore existing
-         |                     file and re-generate all.
-         |
-         |      :return: None, this is action that generates the repo structure
-         |               saassist_path/data/
-         |               `---repos/
-         |                   `--{security ID}/
-         |                      `---{version}
-         |                          `---{security ID}.info
-         |                          `---{file name}.asc
-         |                          `---{apar file}
-         |
-         |  ----------------------------------------------------------------------
-         |  Data descriptors defined here:
-         |
-         |  __dict__
-         |      dictionary for instance variables (if defined)
-         |
-         |  __weakref__
-         |      list of weak references to the object (if defined)
-
-    DATA
-        proxy = ''
-        saassist_home = '/Users/kairoaraujo/Documents/Dev/Python/saassist-serv...
-        ssl_context = False
-
-    FILE
-        /Users/kairoaraujo/Documents/Dev/Python/SAAssist/saassist-server/saassist/saaserver.py
-
-
-* saassist/datacollector.py
-
-.. code-block::
-
-    NAME
-        saassist.datacollector
-
-    DESCRIPTION
-        # -*- coding: utf-8 -*-
-        #
-        # datacollector.py
-        #
-
-    CLASSES
-        builtins.object
-            Collector
-
-        class Collector(builtins.object)
-         |  Class Collector
-         |
-         |      Usage: Collector('CVE/IV Number')
-         |
-         |      Sample:
-         |
-         |      from datacollector import Collector
-         |      cve_data = Collector('CVE-2016-755')
-         |
-         |  Methods defined here:
-         |
-         |  __init__(self, sec_id='')
-         |
-         |  apar_data(self)
-         |      :return: dictionary with basic informations from APAR
-         |
-         |               Dictionary structure:
-         |               {
-         |               [Version Version]: [[Affected Releases], 'APAR abstract',
-         |                                  'affected release' [ASC File link],
-         |                                  [APAR File link], 'affected filesets']
-         |               }
-         |
-         |  ----------------------------------------------------------------------
-         |  Data descriptors defined here:
-         |
-         |  __dict__
-         |      dictionary for instance variables (if defined)
-         |
-         |  __weakref__
-         |      list of weak references to the object (if defined)
-
-    DATA
-        cache_time = 86400
-        flrt_url = 'https://www-304.ibm.com/webapp/set2/flrt/doc?page=security...
-        proxy = ''
-        saassist_home = '/Users/kairoaraujo/Documents/Dev/Python/saassist-serv...
-        ssl_context = False
-
-    FILE
-        /Users/kairoaraujo/Documents/Dev/Python/SAAssist/saassist-server/saassist/datacollector.py
+PyDoc is available.
 
 
 saassist-client structure
 =========================
 
 saassist-client is a simple Korn Shell (ksh)
-
-.. code-block::
-
-    * client_config has global variables
-
-    * saassist-client is the main ksh that retrieves informations from server
 
