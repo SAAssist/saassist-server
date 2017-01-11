@@ -29,8 +29,7 @@ def _print_header():
     print('\n')
     print('=' * 80)
     print('SAAssist-server (Security APAR Assist Server) - Version {0}'.format(
-
-    ))
+        version))
     print('=' * 80)
 
 

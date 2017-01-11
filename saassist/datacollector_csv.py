@@ -121,8 +121,14 @@ class Collector(object):
             elif 'ftp://' in url:
                 https_url = url.strip().replace('ftp://', 'https://')
 
-            else:
+            elif 'https://' in url:
                 https_url = url.strip()
+
+            else:
+                https_url = None
+                print('[ERROR] Unexpected error. Please report it. '
+                      '[saassist-server][apar_data](version)')
+                exit(2)
 
             return https_url
 
@@ -140,10 +146,15 @@ class Collector(object):
             # [Version] Version
             # =================
             # AIX versions are defined as NNNN-NN-NN and PowerVM as N.N.N.N
-            if re.search('-', versions.split('::')[0]):
+
+            if re.search('[a-zA-Z]', versions):
+                affected_versions = 'ALL'
+
+            elif re.search('-', versions.split('::')[0]):
                 affected_versions = '{0}-{1}'.format(
                     versions.split('::')[0].split('-')[0],
                     versions.split('::')[0].split('-')[1])
+
             else:
                 affected_versions = '{0}.{1}'.format(
                     versions.split('::')[0].split('.')[0],
@@ -153,8 +164,11 @@ class Collector(object):
             # [affected_releases] Affected releases
             # =====================================
             # collect affected releases
-            for osrel in versions.split('::'):
-                affected_releases.append(osrel.strip())
+            if affected_versions == 'ALL':
+                affected_releases.append('ALL')
+            else:
+                for osrel in versions.split('::'):
+                    affected_releases.append(osrel.strip())
 
             #
             # [asc_file_data] APAR ASC file
@@ -173,7 +187,8 @@ class Collector(object):
                         request.urlopen(
                             _replace_to_https(bulletin_url)).read(),
                             'html.parser')
-                except errorj.URLError as e:
+                except error.URLError as e:
+                    asc_html = None
                     exit('\033[1;31m[ERROR]\033[1;00m {0}\n'.format(e))
 
                 for pre_text in asc_html.find_all('pre'):
@@ -259,6 +274,7 @@ class Collector(object):
 
             # initial row data
             os_versions = flrt_row[2]
+            download_link = flrt_row[12]
             apars = flrt_row[4]
             cvss = flrt_row[13]
 
@@ -276,7 +292,7 @@ class Collector(object):
                 else:
                     _apar_query(flrt_row)
 
-            if self.apar.startswith('CVE') and self.apar in cvss:
+            elif self.apar.startswith('CVE') and self.apar in cvss:
 
                 # TODO
                 # check if the affected version is not an specific packages
@@ -287,22 +303,32 @@ class Collector(object):
                     if os_versions == 'versions':
                         continue
 
-                    else:
-                        print('[WARNING] There is a specific APAR for {0}. \n'
-                              'It is package for {1} and not a fileset '
-                              'update.\n'
-                              'It is NOT supported by Security APAR Assist '
-                              'yet.\n'
-                              'Skipping it.'
-                              '\n'.format(self.apar, os_versions))
+                    elif download_link.split('/')[-1].split('.')[-1] == 'tar':
+                        _apar_query(flrt_row)
+
+                    elif ((re.search('See advisory', download_link)) or
+                        (download_link.split('/')[-1].split('.')[-1] != 'tar')):
+                        print('[WARNING] \n'
+                              'This kind of APAR is not supported because a '
+                              'specific ifix is not available to be installed.'
+                              '\n\n'
+                              'Please check out and see what is required to'
+                              'fix this APAR: {0}'.format(download_link))
                         continue
 
-                _apar_query(flrt_row)
+                    else:
+                        print('[ERROR] Unexpected error. Please report it. '
+                              '[saassist-server][apar_data](version)')
+                        exit(2)
+
+                else:
+                    _apar_query(flrt_row)
 
         # return dictionary with basic APAR information
         if len(apar_flrt) == 0:
             # if CVE/IV doesn't exists
-            print('{0} was not found in {1}'.format(self.apar, flrt_url))
+            print('\nA valid APAR for {0} was not found in {1}'.format(
+                self.apar, flrt_url))
             exit()
 
         else:
