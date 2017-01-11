@@ -4,7 +4,7 @@ Security APAR Assistant
 
 :SAAssist: Security APAR Assistant
 :License: Apache 2.0
-:Development: http://github/kairoaraujo/SAAssist
+:Development: https://github.com/SAAssist/
 
 
 .. contents::
@@ -98,7 +98,7 @@ content and config the server_config.py file.
 
 1. Download
 
-    http://link
+    http://github.com/SAAssist
 
 
 2. Extract
@@ -254,3 +254,9 @@ saassist-client structure
 
 saassist-client is a simple Korn Shell (ksh)
 
+Reporting bugs
+**************
+
+SAAssist Server https://github.com/SAAssist/saassist-server/issues
+
+SAAssist Client https://github.com/SAAssist/saassist-client/issues

@@ -128,7 +128,10 @@ class Collector(object):
                 https_url = None
                 print('[ERROR] Unexpected error. Please report it. '
                       '[saassist-server][apar_data](version)\n'
-                      'APAR: {0}'.format(self.apar))
+                      'APAR: {0}\n'
+                      '\n'
+                      'https://github.com/SAAssist/saassist-server/issues'
+                      '\n'.format(self.apar))
                 exit(2)
 
             return https_url
@@ -322,7 +325,10 @@ class Collector(object):
                     else:
                         print('[ERROR] Unexpected error. Please report it. '
                               '[saassist-server][apar_data](version)\n'
-                              'APAR: {0}'.format(self.apar))
+                              'APAR: {0}\n'
+                              '\n'
+                              'https://github.com/SAAssist/saassist-server/'
+                              'issues\n'.format(self.apar))
                         exit(2)
 
                 else:

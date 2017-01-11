@@ -141,7 +141,10 @@ class SAAServer(object):
                     else:
                         print('[ERROR]: Unexpected error, please report it.'
                               '[saaserver.py][apar_asc_data]\n'
-                              'APAR: {0}'.format(self.sec_id))
+                              'APAR: {0}\n'
+                              '\n'
+                              'https://github.com/SAAssist/saassist-server/'
+                              'issues\n'.format(self.sec_id))
 
                 except error.URLError as e:
                     exit('\033[1;31m[ERROR]\033[1;00m {0}\n'.format(e))
