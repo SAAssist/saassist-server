@@ -43,9 +43,8 @@ class Collector(object):
         cve_data = Collector('CVE-2016-755')
     """
 
-    def __init__(self, sec_id=''):
+    def __init__(self):
 
-        self.apar = sec_id.upper()
         self.flrt_cache = '{0}/saassist/data/cache/flrt_cache.csv'.format(
             saassist_home)
 
@@ -62,22 +61,25 @@ class Collector(object):
             opener = request.build_opener(proxy_connect)
             request.install_opener(opener)
 
-        def _collect_data():
-            # Collect FLRT data
-            try:
-                print('\n[SERVER] Accessing IBM FLRT to retrieve APARs '
-                      'informations.')
-                request.urlretrieve(flrt_url, self.flrt_cache)
-            except error.URLError as e:
-                exit('\033[1;31m[ERROR]\033[1;00m {0}\n'.format(e))
+    def _collect_data(self):
+        # Collect FLRT data
+        try:
+            print('\n[SERVER] Accessing IBM FLRT to retrieve APARs '
+                  'informations.')
+            result = request.urlretrieve(flrt_url, self.flrt_cache)
+        except error.URLError as e:
+            result = '\033[1;31m[ERROR]\033[1;00m {0}\n'.format(e)
+            print(result)
+        return result
 
-        def _read_cache_data():
-            # Collect FLRT data from 'cache' file
-            flrt_data_csv = csv.reader(open(self.flrt_cache, newline='',
-                                            encoding='ISO-8859-1'),
-                                       delimiter=',')
-            return flrt_data_csv
+    def _read_cache_data(self):
+        # Collect FLRT data from 'cache' file
+        flrt_data_csv = csv.reader(open(self.flrt_cache, newline='',
+                                        encoding='ISO-8859-1'),
+                                        delimiter=',')
+        return flrt_data_csv
 
+    def flrt_data(self):
         # check if the file still on cache size server_config.cache_time
         # if ok, use file, if not update the file
         if os.path.isfile(self.flrt_cache):
@@ -85,21 +87,19 @@ class Collector(object):
             file_time = (time.time() - os.path.getmtime('{0}'.format(
                 self.flrt_cache))) > cache_time
             if file_time:
-                _collect_data()
-                self.flrt_data = _read_cache_data()
+                self._collect_data()
+                return self._read_cache_data()
 
             else:
-                self.flrt_data = _read_cache_data()
+                return self._read_cache_data()
 
         else:
-            _collect_data()
-            self.flrt_data = _read_cache_data()
+            self._collect_data()
+            return self._read_cache_data()
 
-        # Collect all APAR information
-        self.flrt_data = _read_cache_data()
-
-    def apar_data(self):
+    def apar_data(self, sec_id):
         """
+        :sec_id: CVE or IV number
         :return: dictionary with basic informations from APAR
 
                  Dictionary structure:
@@ -112,6 +112,8 @@ class Collector(object):
         """
 
         # initialize the dictionary used to store all informations of APAR
+        
+        apar = sec_id.upper()
 
         def _replace_to_https(url):
             # IBM has HTTPS for all links, for this we will use always HTTPS
@@ -131,7 +133,7 @@ class Collector(object):
                       'APAR: {0}\n'
                       '\n'
                       'https://github.com/SAAssist/saassist-server/issues'
-                      '\n'.format(self.apar))
+                      '\n'.format(apar))
                 exit(2)
 
             return https_url
@@ -220,7 +222,7 @@ class Collector(object):
 
                 apar_ftp = FTP(download.split('/')[2])
                 apar_ftp.login()
-                apar_ftp.cwd('/aix/ifixes/{0}/'.format(self.apar.lower()))
+                apar_ftp.cwd('/aix/ifixes/{0}/'.format(apar.lower()))
                 apar_ftp_list = apar_ftp.nlst()
 
                 for pkg in apar_ftp_list:
@@ -237,7 +239,7 @@ class Collector(object):
                 apar_dwn_link = apar_dwl_cnt.find_all('a')
                 # search for link that has the IV name
                 for apar_link in apar_dwn_link:
-                    if re.search(self.apar, apar_link.text):
+                    if re.search(apar, apar_link.text):
                         apar_download_link.append('{0}{1}'.format(
                             download.strip(),
                             apar_link.text
@@ -270,7 +272,7 @@ class Collector(object):
 
         # check data on flrt_data and select the row to be performed the query
         apar_flrt = {}
-        for flrt_row in self.flrt_data:
+        for flrt_row in self.flrt_data():
             affected_releases = []
             asc_file_data = []
             apar_download_link = []
@@ -283,21 +285,21 @@ class Collector(object):
             cvss = flrt_row[13]
             bulletin = flrt_row[7]
 
-            if self.apar.startswith('IV') and self.apar in apars:
+            if apar.startswith('IV') and apar in apars:
 
                 if 'CVE' in cvss:
                     # safety check. CVE has priority over IV. If a IV has an
                     # CVE the CVE will be indicated instead of IV.
                     print('[INFO] You are trying to search for a IV that has '
                           'a specific CVE. Please use the CVE instead IV.\n')
-                    print('CVE reference for {0}: {1}\n'.format(self.apar,
+                    print('CVE reference for {0}: {1}\n'.format(apar,
                                                                 cvss))
                     exit(1)
 
                 else:
                     _apar_query(flrt_row)
 
-            elif self.apar.startswith('CVE') and self.apar in cvss:
+            elif apar.startswith('CVE') and apar in cvss:
 
                 # TODO
                 # check if the affected version is not an specific packages
@@ -328,7 +330,7 @@ class Collector(object):
                               'APAR: {0}\n'
                               '\n'
                               'https://github.com/SAAssist/saassist-server/'
-                              'issues\n'.format(self.apar))
+                              'issues\n'.format(apar))
                         exit(2)
 
                 else:
@@ -338,7 +340,7 @@ class Collector(object):
         if len(apar_flrt) == 0:
             # if CVE/IV doesn't exists
             print('\nA valid APAR fix for {0} was not found in {1}\n'.format(
-                self.apar, flrt_url))
+                apar, flrt_url))
             exit()
 
         else:

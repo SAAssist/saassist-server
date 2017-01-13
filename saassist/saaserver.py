@@ -36,8 +36,6 @@ class SAAServer(object):
     def __init__(self, sec_id):
 
         self.sec_id = sec_id.upper()
-        self.apar = Collector(self.sec_id)
-        self.apar_data = self.apar.apar_data()
 
         # ssl_context is a option when receives error about unverified SSL
         if ssl_context:
@@ -72,7 +70,10 @@ class SAAServer(object):
         """
 
         # check if the data has some data
-        if len(self.apar_data) == 0:
+        flrt_data = Collector()
+        apar_data = flrt_data.apar_data(self.sec_id)
+
+        if len(apar_data) == 0:
             print('{0} is not valid or was not found at IBM FLRT (Fix Level '
                   'Recommendation Tool.)\n'.format(self.sec_id))
             exit()
@@ -97,20 +98,20 @@ class SAAServer(object):
                 print('  -[REPO] Directory {0} already exists.'.format(
                     self.sec_id))
 
-        for apar_key in self.apar_data.keys():
+        for apar_key in apar_data.keys():
 
             # initialize all variables
-            apar_abstract = self.apar_data[apar_key][0]
-            apar_releases = ' '.join(self.apar_data[apar_key][1])
+            apar_abstract = apar_data[apar_key][0]
+            apar_releases = ' '.join(apar_data[apar_key][1])
             apar_rel_dir = '{0}/{1}'.format(cve_dir, apar_key)
-            apar_asc_data = self.apar_data[apar_key][2]
+            apar_asc_data = apar_data[apar_key][2]
             apar_asc_file = '{0}/{1}.asc'.format(apar_rel_dir,
                                                  self.sec_id)
-            apar_dwl_link = self.apar_data[apar_key][3]
+            apar_dwl_link = apar_data[apar_key][3]
             apar_dwl_path = '{0}/'.format(apar_rel_dir)
-            apar_filesets = ' '.join(self.apar_data[apar_key][4])
+            apar_filesets = ' '.join(apar_data[apar_key][4])
             cve_info_file = '{0}/{1}.info'.format(apar_rel_dir, self.sec_id)
-            apar_rebooted = self.apar_data[apar_key][5]
+            apar_rebooted = apar_data[apar_key][5]
 
             if not os.path.exists(apar_rel_dir):
                 print(
