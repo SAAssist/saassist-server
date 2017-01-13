@@ -18,11 +18,8 @@
 import unittest
 import mock
 from saassist.datacollector import Collector
-#from saassist.datacollector import os
 
-fake_flrt_return_data = open('saassist/tests/fake_data/'
-                             'fake_flrt_cache.csv', 'r',
-                             encoding='ISO-8859-1').read()
+fake_flrt_return_data = 'saassist/tests/fake_data/fake_flrt_cache.csv'
 
 
 class TestCollector(unittest.TestCase):
@@ -41,6 +38,12 @@ class TestCollector(unittest.TestCase):
 
         mock_read_cache_data.reader.return_value = 'CVS data read OK'
         self.assertEqual('CVS data read OK', self.apar_test._read_cache_data())
+
+
+
+
+
+
 
 
 

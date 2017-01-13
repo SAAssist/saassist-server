@@ -83,7 +83,6 @@ class Collector(object):
         # check if the file still on cache size server_config.cache_time
         # if ok, use file, if not update the file
         if os.path.isfile(self.flrt_cache):
-
             file_time = (time.time() - os.path.getmtime('{0}'.format(
                 self.flrt_cache))) > cache_time
             if file_time:
