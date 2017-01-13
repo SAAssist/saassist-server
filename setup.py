@@ -30,7 +30,7 @@ setup(
     author_email="kairo@kairo.eti.br",
     maintainer="Kairo Araujo",
     maintainer_email="kairo@kairo.eti.br",
-    url="https://github.com/kairoaraujo/SAAssist/saassist-server",
+    url="https://github.com/SAAssist",
     keywords="APAR Security Assistance Server Python FLRT IBM AIX VIOS PowerVM"
              "saassist-server SAAssist",
     packages=find_packages(exclude=['*.test', 'tests.*']),

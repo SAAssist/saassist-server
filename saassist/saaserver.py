@@ -18,7 +18,7 @@
 from server_config import proxy
 from server_config import saassist_home
 from server_config import ssl_context
-from saassist.datacollector_csv import Collector
+from saassist.datacollector import Collector
 import ssl
 from urllib import request
 from urllib import error
@@ -139,8 +139,12 @@ class SAAServer(object):
                         asc_file.close()
 
                     else:
-                        print('[ERROR]: You got a strange error, please report '
-                              'it [saaserver.py][apar_asc_data]')
+                        print('[ERROR]: Unexpected error, please report it.'
+                              '[saaserver.py][apar_asc_data]\n'
+                              'APAR: {0}\n'
+                              '\n'
+                              'https://github.com/SAAssist/saassist-server/'
+                              'issues\n'.format(self.sec_id))
 
                 except error.URLError as e:
                     exit('\033[1;31m[ERROR]\033[1;00m {0}\n'.format(e))
