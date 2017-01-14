@@ -297,8 +297,8 @@ SAAssist Server https://github.com/SAAssist/saassist-server/issues
 
 SAAssist Client https://github.com/SAAssist/saassist-client/issues
 
-Developing
-**********
+Contributing
+************
 
 SAAssist Server (saassist-server) is developed in Python (version 3) language
 
@@ -310,19 +310,19 @@ ToDos
 * Create all unit tests 
 * Include support for ftp protocol
 
-Contributing
-============
+New code or bug fixes
+=====================
 
 1. Do the fork from http://github.com/SAAssist
 
 
 2. Create a branch ``git checkout -b new_feature`` or ``git checkout -b bug_000X``
 
+3. Do your code
 
-3. Run the tests ``tox -e py34`` (if your version is Python 3.5 use py35)
+4. Run tests ``tox -e py34`` (if your version is Python 3.5 use py35)
 
-
-4. Submit your code to review ``git review``
+5. Submit your code to review ``git review``
 
 
 saassist-server structure
