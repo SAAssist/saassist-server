@@ -118,6 +118,11 @@ if you want to run this temporally, just run:
 
 ``saassist-webserver``
 
+Screenshots
+^^^^^^^^^^^
+
+.. image:: doc/screenshots/saassist_webserver.png
+
 SAAssist Client (saassist-client)
 =================================
 
@@ -125,10 +130,29 @@ The SAAssist Client (saassist-client) is written in Korn Shell (ksh).
 
 This is a simple ksh script that access the SAAssist Server (saassist-server)
 by HTTP or NFS and collect informations about a specific APAR (CVE/IV), check
-if appliclable for the server, check informations and install if required.
+if applicable for the server, check informations and install if required.
 
 The only requirement is curl package if you want to use HTTP protocol, for NFS
 protocol there is no requirements.
+
+Screenshots
+^^^^^^^^^^^
+
+* Checking
+
+.. image:: doc/screenshots/client_not_affected.png
+
+.. image:: doc/screenshots/client_affected.png
+
+* Reading info
+
+.. image:: doc/screenshots/client_info.png
+
+
+* Install APAR/Fix
+
+.. image:: doc/screenshots/client_install.png
+.. image:: doc/screenshots/client_install_end.png
 
 
 Using saassist-client
