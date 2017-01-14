@@ -93,17 +93,20 @@ The other options are -h to help of to -u update an existent CVE/IV.
 
 Screenshots
 ^^^^^^^^^^^
-    * Help
 
-    .. image:: doc/screenshots/help.png
+* Help
 
-    * Creating repository for a CVE
+.. image:: doc/screenshots/help.png
 
-    .. image:: doc/screenshots/creating_repo.png
 
-    * Updating a existing repository for IV
+* Creating repository for a CVE
 
-    .. image:: doc/screenshots/updating.png
+.. image:: doc/screenshots/creating_repo.png
+
+
+* Updating a existing repository for IV
+
+.. image:: doc/screenshots/updating_repo.png
 
 
 Running saassist-webserver
