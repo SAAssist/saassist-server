@@ -9,7 +9,7 @@ Security APAR Assistant
 
 .. contents::
     :local:
-    :depth: 2
+    :depth: 3
     :backlinks: none
 
 Overview
@@ -44,6 +44,35 @@ if desired this APAR fix can be installed.
 Only the SAAssist Server needs to access the IBM FLRT website, proxy is also
 supported, and SAAssist Client needs access only SAAssist Server by HTTP or NFS.
 
+ .. code-block::
+
+     _________________
+    |                 | --------------[ Internet ]--------[ IBM FLRT website ]
+    | saassist server |               * web proxy
+    |_________________|
+            |
+            |
+            `----- [  Repository  ]
+                   [  info, fixes ]
+                   [  HTTP: :NFS  ]
+                           |
+            .--------------'
+            |
+    ________|_________
+    |                 |
+    | saassist client |
+    |_________________|
+            |
+            |
+            |`---- {check}    verify if APAR is applicable & boot required
+            |
+            |`-----{info}     get detailed information about APAR (asc file)
+            |
+             `-----{install}  install APAR
+
+
+
+
 SAAssist Server (saassist-server)
 =================================
 
@@ -60,78 +89,33 @@ HTTP server is available.
 To use NFS is necessary that the system administrator exports the full path of
 repository.
 
-
-Installation
-------------
-
-As requisits to install the saassist-server is necessary Python version 3 and
-BeautifulSoup4 module.
-
-**Installing Python 3**
-
-Python version 3 is required by saassist-server and can run on Linux, AIX and
-MacOS (Windows I have never tried, but I guess is possible also).
-
-Follow bellow the instructions for Linux and AIX.
-
-LINUX
-^^^^^
-
-To install Python 3 use yum or apt-get of your distribution, also install pip3
-
-``yum install python3 pip3``
-
-AIX
-^^^
-
-I have been using this Python3 package to my environment that can be installed
-using ``smitty install``
-
-http://www.aixtools.net/index.php/python3
-
-
-**Installing BeautifulSoup4**
-
-BeautifulSoup is a Python package (module) and is required for saassist-server.
-It can be installed using PIP
-
-PIP
-^^^
-
-``pip3 install bs4``
-
-**Installing saassist-server**
-
-To install saassist-server you need to download the latest version, extract the
-content and config the server_config.py file.
-
-1. Download
-
-    http://github.com/SAAssist
-
-
-2. Extract
-
-    .zip ``unzip saassist-server[version].zip``
-
-    .tar ``tar xvf saassist-server[version].zip``
-
-4. Configure the server_config.py
-
-    All comments about the necessary information are inside of file.
-
-    ``vi server_config.py``
-
-
 Using saassist-server
 ---------------------
 
-The saassist-server is simple to be used. You need to run the saassist-server
-specifying the CVE or IV number that you want to include on repository.
+The saassist-server is simple to be used. Do you need to run the saassist-server
+specifying the CVE or IV number that you want to create (-c) on repository.
 
 Example: ``saassist-server -c CVE-2016-3053`` or ``saassist-server -c IV88136``
 
 The other options are -h to help of to -u update an existent CVE/IV.
+
+Screenshots
+^^^^^^^^^^^
+
+* Help
+
+.. image:: doc/screenshots/help.png
+
+
+* Creating repository for a CVE
+
+.. image:: doc/screenshots/creating_repo.png
+
+
+* Updating a existing repository for IV
+
+.. image:: doc/screenshots/updating_repo.png
+
 
 Running saassist-webserver
 --------------------------
@@ -142,6 +126,11 @@ if you want to run this temporally, just run:
 
 ``saassist-webserver``
 
+Screenshots
+^^^^^^^^^^^
+
+.. image:: doc/screenshots/saassist-webserver.png
+
 SAAssist Client (saassist-client)
 =================================
 
@@ -149,35 +138,10 @@ The SAAssist Client (saassist-client) is written in Korn Shell (ksh).
 
 This is a simple ksh script that access the SAAssist Server (saassist-server)
 by HTTP or NFS and collect informations about a specific APAR (CVE/IV), check
-if appliclable for the server, check informations and install if required.
+if applicable for the server, check informations and install if required.
 
 The only requirement is curl package if you want to use HTTP protocol, for NFS
 protocol there is no requirements.
-
-Installation
-------------
-
-If you want to use HTTP protocol, remember the package curl is required for IBM
-AIX/PowerVM.
-
-Download the saassist-client from the link, extract the files and configure
-the client_config file.
-
-1. Download
-
-    http://link
-
-2. Extract the files
-
-    .zip ``unzip saassist-client[version].zip``
-
-    .tar ``tar xvf saassist-client[version].zip``
-
-4. Configure the client_config
-
-    All comments about the necessary information are inside of file.
-
-    ``vi client_config``
 
 
 Using saassist-client
@@ -202,6 +166,121 @@ Example:
   ``saassist-client info IV91004``
 
   ``saassist-client install CVE-2016-0281``
+
+Screenshots
+^^^^^^^^^^^
+
+* Checking
+
+not affected
+
+.. image:: doc/screenshots/client_not_affected.png
+
+affected
+
+.. image:: doc/screenshots/client_affected.png
+
+* Reading info
+
+.. image:: doc/screenshots/client_info.png
+
+* Install APAR/Fix
+
+.. image:: doc/screenshots/client_install.png
+
+.. image:: doc/screenshots/client_install_end.png
+
+
+
+
+SAAssist Server (saassist-server) Installation
+**********************************************
+
+The dependencies to install the saassist-server is necessary Python version 3 and
+BeautifulSoup4 module.
+
+Installing Python 3
+===================
+
+Python version 3 is required by saassist-server and can run on Linux, AIX and
+MacOS (Windows I have never tried, but I guess is possible also).
+
+Follow bellow the instructions for Linux and AIX.
+
+LINUX
+-----
+
+To install Python 3 use yum or apt-get of your distribution, also install pip3
+
+``yum install python3 pip3``
+
+AIX
+---
+
+I have been using this Python3 package to my environment that can be installed
+using ``smitty install``
+
+http://www.aixtools.net/index.php/python3
+
+
+Installing BeautifulSoup4
+=========================
+
+BeautifulSoup is a Python package (module) and is required for saassist-server.
+It can be installed using PIP
+
+PIP
+---
+
+``pip3 install bs4``
+
+Installing saassist-server
+==========================
+
+To install saassist-server you need to download the latest version, extract the
+content and config the server_config.py file.
+
+1. Download
+
+    http://github.com/SAAssist
+
+
+2. Extract
+
+    .zip ``unzip saassist-server[version].zip``
+
+    .tar ``tar xvf saassist-server[version].zip``
+
+4. Configure the server_config.py
+
+    All comments about the necessary information are inside of file.
+
+    ``vi server_config.py``
+
+SAAssist Client (saassist-client) Installation
+**********************************************
+
+If you want to use HTTP protocol, remember the package curl is required for IBM
+AIX/PowerVM.
+
+Download the saassist-client from the link, extract the files and configure
+the client_config file.
+
+1. Download
+
+    http://github.com/SAAssist/saassist-client
+
+2. Extract the files
+
+    .zip ``unzip saassist-client[version].zip``
+
+    .tar ``tar xvf saassist-client[version].zip``
+
+4. Configure the client_config
+
+    All comments about the necessary information are inside of file.
+
+    ``vi client_config``
 
 Developing
 **********
@@ -250,12 +329,6 @@ saassist-server structure
        { validate data }
        { create the repository data }
        { output actions: user }
-
-
-PyDoc saassist-server python files
-----------------------------------
-
-PyDoc is available.
 
 
 saassist-client structure
