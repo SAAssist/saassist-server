@@ -91,6 +91,20 @@ Example: ``saassist-server -c CVE-2016-3053`` or ``saassist-server -c IV88136``
 
 The other options are -h to help of to -u update an existent CVE/IV.
 
+Screenshots
+^^^^^^^^^^^
+    * Help
+
+    .. image:: doc/screenshots/help.png
+
+    * Creating repository for a CVE
+
+    .. image:: doc/screenshots/creating_repo.png
+
+    * Updating a existing repository for IV
+
+    .. image:: doc/screenshots/updating.png
+
 
 Running saassist-webserver
 --------------------------
