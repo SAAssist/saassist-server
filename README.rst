@@ -121,7 +121,7 @@ if you want to run this temporally, just run:
 Screenshots
 ^^^^^^^^^^^
 
-.. image:: doc/screenshots/saassist_webserver.png
+.. image:: doc/screenshots/saassist-webserver.png
 
 SAAssist Client (saassist-client)
 =================================
@@ -134,25 +134,6 @@ if applicable for the server, check informations and install if required.
 
 The only requirement is curl package if you want to use HTTP protocol, for NFS
 protocol there is no requirements.
-
-Screenshots
-^^^^^^^^^^^
-
-* Checking
-
-.. image:: doc/screenshots/client_not_affected.png
-
-.. image:: doc/screenshots/client_affected.png
-
-* Reading info
-
-.. image:: doc/screenshots/client_info.png
-
-
-* Install APAR/Fix
-
-.. image:: doc/screenshots/client_install.png
-.. image:: doc/screenshots/client_install_end.png
 
 
 Using saassist-client
@@ -177,6 +158,31 @@ Example:
   ``saassist-client info IV91004``
 
   ``saassist-client install CVE-2016-0281``
+
+Screenshots
+^^^^^^^^^^^
+
+* Checking
+
+not affected
+
+.. image:: doc/screenshots/client_not_affected.png
+
+affected
+
+.. image:: doc/screenshots/client_affected.png
+
+* Reading info
+
+.. image:: doc/screenshots/client_info.png
+
+* Install APAR/Fix
+
+.. image:: doc/screenshots/client_install.png
+
+.. image:: doc/screenshots/client_install_end.png
+
+
 
 
 SAAssist Server (saassist-server) Installation
