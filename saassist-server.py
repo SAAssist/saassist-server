@@ -28,8 +28,7 @@ with open(os.path.join(os.path.dirname(__file__), 'VERSION'), 'rb') as f:
 def _print_header():
     print('=' * 80)
     print('SAAssist-server (Security APAR Assist Server) - Version {0}'.format(
-
-    ))
+        version))
     print('=' * 80)
 
 

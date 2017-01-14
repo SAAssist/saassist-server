@@ -4,7 +4,7 @@ Security APAR Assistant
 
 :SAAssist: Security APAR Assistant
 :License: Apache 2.0
-:Development: http://github.com/SAAssist
+:Development: https://github.com/SAAssist/
 
 
 .. contents::
@@ -19,6 +19,15 @@ Security APAR Assist (SAAssist) is a tool to centralized and control the
 security APARs for IBM AIX and IBM PowerVM environment.
 
 SAAssist has two basic components, the SAAssist Server and SAAssist Client.
+
+This is a Open Source software over Apache License 2.0
+
+The Security APAR Assistant (included saassist-server and saassist-client) is
+not IBM Inc. software and are not supported or guaranteed by IBM Inc.
+
+IBM AIX, IBM PowerVM, Fix Level Recommended Tool website are registered
+trademarks of IBM Corporation in the United States, other countries, or both.
+
 
 How it works
 ************
@@ -233,7 +242,7 @@ content and config the server_config.py file.
 
 1. Download
 
-    http://github.com/SAAssist/saassist-server
+    http://github.com/SAAssist
 
 
 2. Extract
@@ -327,4 +336,9 @@ saassist-client structure
 
 saassist-client is a simple Korn Shell (ksh)
 
+Reporting bugs
+**************
 
+SAAssist Server https://github.com/SAAssist/saassist-server/issues
+
+SAAssist Client https://github.com/SAAssist/saassist-client/issues
