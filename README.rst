@@ -49,7 +49,6 @@ supported, and SAAssist Client needs access only SAAssist Server by HTTP or NFS.
                            |
             .--------------'
             |
-            |
     ________|_________
     |                 |
     | saassist client |
