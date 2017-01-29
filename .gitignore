@@ -3,3 +3,5 @@ saassist/data/repos/IV*
 saassist/data/repos/CVE*
 *.pyc
 __pycache__
+.tox
+.testrepository

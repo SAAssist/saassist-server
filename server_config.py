@@ -17,7 +17,7 @@
 
 # Security APAR assistent installation path
 #saassist_home = '/Users/kairoaraujo/Python/SAAssist/saassist-server'
-saassist_home = '/home/karaujo/devel/SAAssist/saassist-server'
+saassist_home = '/Users/kairoaraujo/Dev/SAAssist/unittests/saassist-server'
 
 # Proxy Server
 # If saassist-server needs to access IBM Fix Level Recommendation Tool through
