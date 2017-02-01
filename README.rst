@@ -15,34 +15,36 @@ Security APAR Assistant
 Overview
 ********
 
-Security APAR Assist (SAAssist) is a tool to controls the
-security APARs for IBM AIX and IBM PowerVM environment.
+Security APAR Assist (SAAssist) is a tool to controls security APARs for IBM
+AIX and IBM PowerVM environment.
 
-There are two basic components on SAAssist, SAAssist Server (saassist-server) 
+There are two basic components on SAAssist, SAAssist Server (saassist-server)
 and SAAssist Client (saassist-client).
 
 This is a Open Source software licensed by Apache License 2.0.
 
-The Security APAR Assistant (included saassist-server and saassist-client) is
-not a IBM Inc. software and it is not supported or guaranteed by IBM.
+Important:
 
-IBM AIX, IBM PowerVM, Fix Level Recommended Tool website are registered
+The Security APAR Assistant (including saassist-server and saassist-client) is
+not an IBM Inc. software and it is not supported or guaranteed by IBM.
+
+IBM AIX, IBM PowerVM and IBM Fix Level Recommended Tool website are registered
 trademarks of IBM Corporation in the United States, other countries, or both.
 
 How it works
 ************
 
-SAAssist Server (saassist-server) is the tool that works directly with IBM Fix
-Level Recommendation Tool (FLRT) website (
-https://www-304.ibm.com/support/customercare/flrt/) and it creates a repository 
-with APARs information and packages based on CVE or IV number. 
+SAAssist Server (saassist-server) is the tool that works directly with the IBM
+Fix Level Recommendation Tool (FLRT) website (
+https://www-304.ibm.com/support/customercare/flrt/) and it creates a repository
+with APARs information and packages based on CVE or IV number.
 
-Those APARs informations and packages are accessed by SAAssist Client 
-(saassist-client) through HTTP or NFS protocol and checks if the APAR affect the
-server and can be installed.
+Those APARs information and packages are accessed by SAAssist Client
+(saassist-client) by HTTP or NFS protocol and checks if the APAR affect the
+server and if it can be installed.
 
 Only the SAAssist Server needs to access the IBM FLRT website, proxy is also
-supported and can be used. 
+supported and it can be used.
 AAssist Client needs to access only SAAssist Server by HTTP or NFS.
 
 Schema overvivew
@@ -66,29 +68,29 @@ Schema overvivew
     |_________________|
             |
             |
-            |`---- {check}    verify if APAR is applicable & boot required
+            |`---- {check}    verifies if APAR is applicable & boot required
             |
-            |`-----{info}     get detailed information about APAR (asc file)
+            |`-----{info}     gets detailed information about APAR (asc file)
             |
-             `-----{install}  install APAR
-             
-    saassist-server: can be an AIX, Linux or MacOS with Internet access 
+             `-----{install}  installs APAR
+
+    saassist-server: it can be an AIX, Linux or MacOS with Internet access
                      directly or through proxy.
-                     
-    saassist-client: your AIX or PowerVM server running as client
-                   
+
+    saassist-client: AIX or PowerVM server
+
 
 SAAssist Server (saassist-server)
 =================================
 
 The SAAssist Server (saassist-server) is written in Python.
 
-saassist-server accesses IBM FLRT website and collects all information about a
-specific CVE or IV number. It downloads data from website and store in a
-repository to be used by SAAssist Client (saassist-client) upon request
-through HTTP or NFS.
+saassist-server accesses the IBM FLRT website and collects all information
+about a specific CVE or IV number. It downloads data from website and stores
+it in a repository to be used by SAAssist Client (saassist-client) upon
+request through HTTP or NFS.
 
-The saassist-server includes the HTTP server (saassist-webserver), if a non 
+The saassist-server includes the HTTP server (saassist-webserver), if a non
 static HTTP server is available it can be used as well.
 
 To use NFS is necessary that the system administrator exports the full path of
@@ -97,12 +99,12 @@ repository ([saassist-server directory]/saassist/data/repos).
 Using saassist-server
 ---------------------
 
-The saassist-server is simple to be used. Do you need to run the saassist-server
-specifying the CVE or IV number that you want to create (-c) on repository.
+The saassist-server is simple to use. You need to run the saassist-server
+specifying the CVE or IV number that you want to create (-c) on the repository.
 
 Example: ``saassist-server -c CVE-2016-3053`` or ``saassist-server -c IV88136``
 
-The another options are -h to help of to -u update an existent CVE/IV.
+The other options are -h to help of -u to update an existent CVE/IV.
 
 Screenshots
 ^^^^^^^^^^^
@@ -112,12 +114,12 @@ Screenshots
 .. image:: doc/screenshots/help.png
 
 
-* Creating repository for a CVE
+* Creating a repository for a CVE
 
 .. image:: doc/screenshots/creating_repo.png
 
 
-* Updating a existing repository for IV
+* Updating an existing repository for IV
 
 .. image:: doc/screenshots/updating_repo.png
 
@@ -125,9 +127,9 @@ Screenshots
 Running saassist-webserver
 --------------------------
 
-The web server is included. If you want to have a static HTTP Server is 
+The web server is included. If you want to have a static HTTP Server is
 recommended install Apache or another one.
-If you want to run this temporally, just run:
+If you want to run this temporary, just run:
 
 ``saassist-webserver``
 
@@ -142,9 +144,9 @@ SAAssist Client (saassist-client)
 The SAAssist Client (saassist-client) is written in Korn Shell (ksh).
 
 This is a simple ksh script that accesses the SAAssist Server (saassist-server)
-using HTTP or NFS protocol and collects informations about a specific APAR 
-(CVE/IV), check if it is applicable for the server, provide detailed 
-informations and install the fix if required by you.
+using HTTP or NFS protocol and collects information about a specific APAR
+(CVE/IV), checks if it is applicable for the server, provides detailed
+information and installs the fix if required by you.
 
 Using NFS procotol, there is no requirements. Curl is required if you want to
 use saassist-client through HTTP procotol.
@@ -153,15 +155,15 @@ use saassist-client through HTTP procotol.
 Using saassist-client
 ---------------------
 
-The saassist-server is simple to be used. Do You need to run the 
-saassist-client.sh with the action (parameters) that you want to perform and
-include the specific CVE or IV Number.
+The saassist-server is simple to use. You need to run the
+saassist-client.sh with the actions (parameters) that you want to perform and
+specify the CVE or IV Number.
 
 
 To get full help use: ``saassist-client.sh help``
 
-* check   : Verify if the system is affected by CVE/IV
-* info    : Open the details about the CVE/IV 
+* check   : Verifies if the system is affected by CVE/IV
+* info    : Shows details about the CVE/IV
 * install : Installs the APAR if it is available and applicable to the system
 
 
@@ -197,8 +199,6 @@ affected
 .. image:: doc/screenshots/client_install_end.png
 
 
-
-
 SAAssist Server (saassist-server) Installation
 **********************************************
 
@@ -208,23 +208,23 @@ BeautifulSoup4 module for Python.
 Installing Python 3
 ===================
 
-Python version 3 is required by saassist-server and it can runs on Linux, AIX 
-and MacOS (Windows I have never tried, but I guess it is possible also).
+Python version 3 is required by saassist-server and it can runs on Linux, AIX
+and MacOS (I have never  on Windows, but I believe that it is possible too).
 
 Follow bellow the instruction for Linux and AIX.
 
 LINUX
 -----
 
-To install Python 3 use yum or apt-get of your distribution, also to install 
-pip3
+To install Python 3 use yum or apt-get from your Linux distribution, do the
+same to install pip3
 
 ``yum install python3 pip3``
 
 AIX
 ---
 
-I have been using this Python3 package to my environment that it can be 
+I have been using this Python3 package to my environment and it can be
 installed using ``smitty install``
 
 http://www.aixtools.net/index.php/python3
@@ -233,7 +233,7 @@ http://www.aixtools.net/index.php/python3
 Installing BeautifulSoup4
 =========================
 
-BeautifulSoup is a Python package (module) and it is required for 
+BeautifulSoup is a Python package (module) and it is required for
 saassist-server. It can be installed using PIP
 
 PIP
@@ -270,7 +270,7 @@ SAAssist Client (saassist-client) Installation
 If you want to use HTTP protocol, remember the package curl is required for IBM
 AIX/PowerVM.
 
-Download the saassist-client from the link, extract the files and edit 
+Download the saassist-client from the link, extract the files and edit
 client_config file.
 
 1. Download
@@ -290,8 +290,8 @@ client_config file.
     ``vi client_config``
 
 
-Reporting bugs
-**************
+Reporting bugs and improvements
+*******************************
 
 SAAssist Server https://github.com/SAAssist/saassist-server/issues
 
@@ -304,25 +304,28 @@ SAAssist Server (saassist-server) is developed in Python (version 3) language
 
 and SAAssist Client (saassist-client) is developed in Korn Shell (ksh).
 
-ToDos
+To Do
 =====
-
-* Create all unit tests 
-* Include support for ftp protocol
+* [server] Avoid to store the same fix for different versions to reduce
+  data storage usage.
+* [server/client] implement checksum for files
+* [server/client] Include support for ftp protocol
+* [server] Create all unit tests for Python code
 
 New code or bug fixes
 =====================
 
-1. Do the fork from http://github.com/SAAssist
+1. Do the fork from http://github.com/SAAssist/saassist-server or saassist-client
 
+2. Do the clone from your fork ``git clone http://github.com/username/saassist-server``
 
-2. Create a branch ``git checkout -b new_feature`` or ``git checkout -b bug_000X``
+3. Create a branch ``git checkout -b new_feature`` or ``git checkout -b bug_000X``
 
-3. Do your code
+4. Do your code or fix a bug :)
 
-4. Run tests ``tox -e py34`` (if your version is Python 3.5 use py35)
+5. Run tests ``tox -e py34`` (if your version is Python 3.5 use py35)
 
-5. Submit your code to review ``git review``
+6. Submit your code to review ``git-review``
 
 
 saassist-server structure

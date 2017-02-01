@@ -16,8 +16,7 @@
 # limitations under the License.
 
 # Security APAR assistent installation path
-#saassist_home = '/Users/kairoaraujo/Python/SAAssist/saassist-server'
-saassist_home = '/Users/kairoaraujo/Dev/SAAssist/unittests/saassist-server'
+saassist_home = '/saassist-server'
 
 # Proxy Server
 # If saassist-server needs to access IBM Fix Level Recommendation Tool through
@@ -41,5 +40,4 @@ cache_time = 86400
 
 # IBM Fix Level Recommendation Tool URL
 # Is not recommended to change. Edit it only if necessary/required
-#flrt_url = 'https://www-304.ibm.com/webapp/set2/flrt/doc?page=security&skey=updatedAll'
 flrt_url = 'https://www14.software.ibm.com/support/customercare/flrtbeta/doc?page=aparCSV'
