@@ -238,7 +238,7 @@ class Collector(object):
                 apar_dwn_link = apar_dwl_cnt.find_all('a')
                 # search for link that has the IV name
                 for apar_link in apar_dwn_link:
-                    if re.search(apar, apar_link.text):
+                    if re.search('IV[0-9][0-9][0-9][0-9][0-9]', apar_link.text):
                         apar_download_link.append('{0}{1}'.format(
                             download.strip(),
                             apar_link.text
