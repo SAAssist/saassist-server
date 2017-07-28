@@ -5,3 +5,4 @@ saassist/data/repos/CVE*
 __pycache__
 .tox
 .testrepository
+saassist/data/cache/flrt_cache.csv*

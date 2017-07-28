@@ -26,7 +26,7 @@ proxy = ''
 
 # SSL Unverified Context.
 # Just change it if you are having troubles with SSL errors.
-ssl_context=False
+ssl_context=True
 
 # Security APAR assistant Web Server Port
 # If you decide to use the included webserver (saassist-webserver.py) specify

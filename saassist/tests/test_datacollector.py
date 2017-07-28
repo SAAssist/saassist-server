@@ -31,7 +31,7 @@ class TestCollector(unittest.TestCase):
     def test_collect_data(self, mock_collect_data):
 
         mock_collect_data.urlretrieve.return_value = 'File Collected OK'
-        self.assertEqual('File Collected OK', self.apar_test._collect_data())
+        self.assertEqual('File Collected OK', self.apar_test.collect_data())
 
     @mock.patch('saassist.datacollector.csv')
     def test_read_cache_data(self, mock_read_cache_data):

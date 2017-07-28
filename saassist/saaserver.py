@@ -173,7 +173,8 @@ class SAAServer(object):
                         # it avoids download the same fix creating only a
                         # symbolic link for first fix downloaded
                         if (apar_file_count != 0) and \
-                                (apar_file_main_name == apar_file.split('/')[-1]):
+                                (apar_file_main_name ==
+                                     apar_file.split('/')[-1]):
                             if os.path.islink('{0}{1}'.format(
                                 apar_dwl_path, apar_file.split('/')[-1])):
 

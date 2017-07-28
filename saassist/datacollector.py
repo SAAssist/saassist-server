@@ -25,6 +25,7 @@ from server_config import flrt_url
 from server_config import proxy
 from server_config import saassist_home
 from server_config import ssl_context
+from shutil import move
 import ssl
 import time
 from urllib import request
@@ -47,6 +48,7 @@ class Collector(object):
 
         self.flrt_cache = '{0}/saassist/data/cache/flrt_cache.csv'.format(
             saassist_home)
+        self.flrt_cache_dwnld = '{0}_download'.format(self.flrt_cache)
 
         # ssl_context is a option when receives error about unverified SSL
         if ssl_context:
@@ -61,15 +63,26 @@ class Collector(object):
             opener = request.build_opener(proxy_connect)
             request.install_opener(opener)
 
-    def _collect_data(self):
+    def collect_data(self):
         # Collect FLRT data
         try:
             print('\n[SERVER] Accessing IBM FLRT to retrieve APARs '
                   'informations.')
-            result = request.urlretrieve(flrt_url, self.flrt_cache)
+            result = request.urlretrieve(flrt_url, self.flrt_cache_dwnld)
+            file_check = open(self.flrt_cache_dwnld).readline().split(',')[0]
+            if file_check == 'type':
+                move(self.flrt_cache_dwnld, self.flrt_cache)
+
+            else:
+                print('[ERROR] Something is wrong to download FLRT data. '
+                      'Please check IBM FLRT site or Internet Access.')
+                exit(3)
+
         except error.URLError as e:
             result = '\033[1;31m[ERROR]\033[1;00m {0}\n'.format(e)
             print(result)
+
+        print('[SERVER] Download complete')
         return result
 
     def _read_cache_data(self):
@@ -86,14 +99,14 @@ class Collector(object):
             file_time = (time.time() - os.path.getmtime('{0}'.format(
                 self.flrt_cache))) > cache_time
             if file_time:
-                self._collect_data()
+                self.collect_data()
                 return self._read_cache_data()
 
             else:
                 return self._read_cache_data()
 
         else:
-            self._collect_data()
+            self.collect_data()
             return self._read_cache_data()
 
     def apar_data(self, sec_id):
@@ -208,7 +221,7 @@ class Collector(object):
             # [apar_download_link] APAR File links
             # ===================================
             # check if APAR is none
-            if download == 'None':
+            if re.search('None|See Bulletin', download, re.IGNORECASE):
                 apar_download_link.append(None)
 
             # check if APAR link is a tar file
@@ -245,9 +258,13 @@ class Collector(object):
                         ))
 
             else:
+                print(download_link)
                 print('[ERROR] Please report it [datacollector.py]'
-                      '[_apar_query()][apar_download_link]')
-                print(download.split('/')[-1])
+                      '[_apar_query()][apar_download_link]\n'
+                      'APAR: {0}\n'
+                      'Download: {1}\n'
+                      'https://github.com/SAAssist/saassist-server/'
+                      'issues\n'.format(apar, download.split('/')[-1]))
                 exit(2)
 
             #
@@ -292,10 +309,17 @@ class Collector(object):
                     print('[INFO] You are trying to search for a IV that has '
                           'a specific CVE. Please use the CVE instead IV.\n')
                     print('CVE reference for {0}: {1}\n'.format(apar,
-                                                                cvss))
-                    exit(1)
+                                                               cvss))
+                    continue
 
                 else:
+                    if re.search('NONE|n/a|See advisory|PreLogin|See Bulletin',
+                                 download_link, re.IGNORECASE) or\
+                                    download_link is "":
+                        print('[WARNING] APAR {0} has not a file available. '
+                              'Please check out and see what is required to '
+                              'fix this APAR: {1}'.format(apar, bulletin))
+                        continue
                     _apar_query(flrt_row)
 
             elif apar.startswith('CVE') and apar in cvss:
@@ -312,15 +336,24 @@ class Collector(object):
                     elif download_link.split('/')[-1].split('.')[-1] == 'tar':
                         _apar_query(flrt_row)
 
-                    elif ((re.search('See advisory', download_link)) or
+                    elif ((re.search('See advisory|See Bulletin',
+                                     download_link, re.IGNORECASE)) or
                           (download_link.split('/')[-1]
                               .split('.')[-1] != 'tar')):
-                        print('[WARNING] \n'
-                              'This kind of APAR is not supported because a '
-                              'specific ifix is not available to be installed.'
+                        print('[WARNING] This kind of APAR is not supported '
+                              'because a specific ifix is not available to be '
+                              'installed.'
                               '\n\n'
                               'Please check out and see what is required to '
                               'fix this APAR: {0}'.format(bulletin))
+                        continue
+
+                    elif re.search('NONE|n/a|Prelogin|See Bulletin',
+                                   download_link, re.IGNORECASE) or \
+                                    download_link is "":
+                        print('[WARNING] APAR {0} has not a file available. '
+                              'Please check out and see what is required to '
+                              'fix this APAR: {1}'.format(apar, bulletin))
                         continue
 
                     else:
@@ -333,6 +366,14 @@ class Collector(object):
                         exit(2)
 
                 else:
+                    if re.search('NONE|n/a|See advisory|PreLogin|See Bulletin',
+                                 download_link, re.IGNORECASE) or\
+                                    download_link is "":
+                        print('[WARNING] APAR {0} has not a file available. '
+                              'Please check out and see what is required to '
+                              'fix this APAR: {1}'.format(apar, bulletin))
+                        continue
+
                     _apar_query(flrt_row)
 
         # return dictionary with basic APAR information
