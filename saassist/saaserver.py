@@ -98,6 +98,12 @@ class SAAServer(object):
                 print('  -[REPO] Directory {0} already exists.'.format(
                     self.sec_id))
 
+        # initialize the variables to avoid download same fix file multiple
+        # times
+        apar_file_count = 0
+        apar_main_file = None
+        apar_file_main_name = None
+
         for apar_key in apar_data.keys():
 
             # initialize all variables
@@ -115,7 +121,8 @@ class SAAServer(object):
 
             if not os.path.exists(apar_rel_dir):
                 print(
-                    '  -[REPO] Creating release directory {0}'.format(apar_key))
+                    '  -[REPO] Creating release directory {0}'.format(
+                        apar_key))
                 os.makedirs(apar_rel_dir)
 
             else:
@@ -152,15 +159,36 @@ class SAAServer(object):
 
             for apar_file in apar_dwl_link:
 
+                if apar_file_count == 0:
+                    apar_main_file = '{0}{1}'.format(apar_dwl_path,
+                                                      apar_file.split('/')[-1])
+                    apar_file_main_name = apar_file.split('/')[-1]
+
                 if not os.path.isfile('{0}/{1}'.format(
                         apar_dwl_path, apar_file.split('/')[-1])) or update:
                     print('  -[REPO] Downloading APAR file {0}'.format(
                         apar_file.split('/')[-1]))
 
                     try:
-                        request.urlretrieve(apar_file, '{0}/{1}'.format(
-                            apar_dwl_path, apar_file.split('/')[-1]
-                        ))
+                        # it avoids download the same fix creating only a
+                        # symbolic link for first fix downloaded
+                        if (apar_file_count != 0) and \
+                                (apar_file_main_name == apar_file.split('/')[-1]):
+                            if os.path.islink('{0}{1}'.format(
+                                apar_dwl_path, apar_file.split('/')[-1])):
+
+                                os.unlink('{0}{1}'.format(
+                                apar_dwl_path, apar_file.split('/')[-1], ))
+
+                            os.symlink(apar_main_file, '{0}{1}'.format(
+                                apar_dwl_path, apar_file.split('/')[-1], ))
+
+                        else:
+                            request.urlretrieve(apar_file, '{0}/{1}'.format(
+                                apar_dwl_path, apar_file.split('/')[-1]
+                            ))
+
+                        apar_file_count += 1
 
                     except error.URLError as e:
                         exit('\033[1;31m[ERROR]\033[1;00m {0}\n'.format(e))
